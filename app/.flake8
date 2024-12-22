@@ -1,0 +1,7 @@
+;Linting is used to ensure code is formatted correctly. It highlights issues like invalid tab spacing and line lengths.
+[flake8]
+exclude=
+    migrations,
+    __pycache__,
+    manage.py,
+    settings.py
