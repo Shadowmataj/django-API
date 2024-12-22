@@ -1,4 +1,3 @@
-;Linting is used to ensure code is formatted correctly. It highlights issues like invalid tab spacing and line lengths.
 [flake8]
 exclude=
     migrations,

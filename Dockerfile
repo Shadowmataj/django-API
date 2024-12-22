@@ -23,9 +23,9 @@ RUN python -m venv /py && \
     #install de requirements list inside the docker image
     /py/bin/pip install -r /tmp/requirements.txt && \
     #
-    if [ $DEV = "true"]; \
-        then /py/bin/pip install -r /tmp/requirements.dev.txt ; \
-        fi && \
+    if [ $DEV = "true" ]; \
+    then /py/bin/pip install -r /tmp/requirements.dev.txt ; \
+    fi && \
     #remove the tmp directory to avoid the files we don't need and make a lighter docker image. 
     rm -rf /tmp && \
     #add user to aovid only the super user
