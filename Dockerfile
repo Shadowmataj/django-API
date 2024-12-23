@@ -20,6 +20,11 @@ ARG DEV=false
 RUN python -m venv /py && \
     #specify full path of the virtual enviroment and update pip 
     /py/bin/pip install --upgrade pip && \
+    # install the postgresql client
+    apk add --update --no-cache postgresql-client && \
+    # 
+    apk add --update --no-cache --virtual .tmp-build-deps \
+        build-base postgresql-dev musl-dev && \
     #install de requirements list inside the docker image
     /py/bin/pip install -r /tmp/requirements.txt && \
     #
@@ -28,6 +33,7 @@ RUN python -m venv /py && \
     fi && \
     #remove the tmp directory to avoid the files we don't need and make a lighter docker image. 
     rm -rf /tmp && \
+    apk del .tmp-build-deps && \
     #add user to aovid only the super user
     adduser \
         #the new user wont' nedd a password nor a home directory to keep the image light
