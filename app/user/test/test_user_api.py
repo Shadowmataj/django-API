@@ -117,7 +117,7 @@ class PublicUserApiTest(TestCase):
 class PrivateUserApiTests(TestCase):
     """Test API request that require authentication."""
     
-    def SetUp(self):
+    def setUp(self):
         self.user = create_user(
             email="test@example.com",
             password="testpass123",
@@ -126,16 +126,16 @@ class PrivateUserApiTests(TestCase):
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
 
-        def test_retrive_profile_success(self):
-            """Test retrieving profile for logged in user."""
-            res = self.client.get(ME_URL)
+    def test_retrive_profile_success(self):
+        """Test retrieving profile for logged in user."""
+        res = self.client.get(ME_URL)
 
-            self.assertEqual(res.status_code, status.HTTP_200_OK)
-            self.assertEqual(res.data, {
-                "name": self.user.name,
-                "email": self.user.email,
-            })
-    
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data, {
+            "name": self.user.name,
+            "email": self.user.email,
+        })
+
     def test_post_me_not_allowed(self):
         """Test POST is not allowed for the me endpoint."""
         res = self.client.post(ME_URL, {})
@@ -145,7 +145,6 @@ class PrivateUserApiTests(TestCase):
     def test_update_user_profile(self):
         """Test updating the user profile for the authenticated user."""
         payload={"name": "Updated Name", "password": "newpasss123"}
-
         res=self.client.patch(ME_URL, payload)
 
         self.user.refresh_from_db()
