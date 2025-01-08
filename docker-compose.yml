@@ -13,11 +13,12 @@ services:
     #map directories from our system into the docker container
     volumes:
       - ./app:/app
+      - dev-static-data:/vol/web
     #command to run the service.
     command: >
       sh -c "python manage.py wait_for_db && 
-             python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
+            python manage.py migrate &&
+            python manage.py runserver 0.0.0.0:8000"
     environment:
       - DB_HOST=db
       - DB_NAME=devdb
@@ -37,3 +38,4 @@ services:
 
 volumes:
   dev-db-data:
+  dev-static-data:

@@ -21,10 +21,10 @@ RUN python -m venv /py && \
     #specify full path of the virtual enviroment and update pip 
     /py/bin/pip install --upgrade pip && \
     # install the postgresql client
-    apk add --update --no-cache postgresql-client && \
+    apk add --update --no-cache postgresql-client jpeg-dev && \
     # 
     apk add --update --no-cache --virtual .tmp-build-deps \
-        build-base postgresql-dev musl-dev && \
+        build-base postgresql-dev musl-dev zlib zlib-dev && \
     #install de requirements list inside the docker image
     /py/bin/pip install -r /tmp/requirements.txt && \
     #
@@ -40,7 +40,11 @@ RUN python -m venv /py && \
         --disabled-password \
         --no-create-home \
         #name of the user
-        django-user
+        django-user && \
+    mkdir -p /vol/web/media && \
+    mkdir -p /vol/web/static && \
+    chown -R django-user:django-user /vol && \
+    chmod -R 755 /vol
 #updates the enviroment variable PATH so we can avoid writing "py/bin" so every time we run a python command it runs directly from our virtual enviroment
 ENV PATH="/py/bin:$PATH"
 #swith to the created user
