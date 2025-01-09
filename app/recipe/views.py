@@ -28,7 +28,7 @@ from recipe import serializers
 
 @extend_schema_view(
     list=extend_schema(
-        parameters = [
+        parameters=[
             OpenApiParameter(
                 "tags",
                 OpenApiTypes.STR,
@@ -37,12 +37,12 @@ from recipe import serializers
             OpenApiParameter(
                 "ingredients",
                 OpenApiTypes.STR,
-                description="Comma separated list of ingredients, IDs to filter.",
+                description="Comma separated list of ingredients\
+                    , IDs to filter.",
             )
         ]
     )
 )
-
 class RecipeViewSet(viewsets.ModelViewSet):
     """View for manage recipe API."""
 
@@ -68,8 +68,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
             ingredients_ids = self._params_to_ints(ingredients)
             queryset = queryset.filter(ingredients__id__in=ingredients_ids)
 
-        return queryset.filter(user=self.request.user).order_by("-id").distinct()
-        
+        return queryset.filter(
+                user=self.request.user
+            ).order_by("-id").distinct()
 
     def get_serializer_class(self):
         """Return the serializer class for requests."""
@@ -77,13 +78,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return serializers.RecipeSerializer
         elif self.action == "upload_image":
             return serializers.RecipeImageSerializer
-        
         return self.serializer_class
 
     def perform_create(self, serializer):
         """Create a new recipe."""
         serializer.save(user=self.request.user)
-    
+
     @action(methods=["POST"], detail=True, url_path="upload-image")
     def upload_image(self, request, pk=None):
         """Upload an image to recipe."""
@@ -99,19 +99,19 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
 @extend_schema_view(
     list=extend_schema(
-        parameters= [
+        parameters=[
             OpenApiParameter(
                 "assigned_only",
-                OpenApiTypes.INT, enum=[0,1],
+                OpenApiTypes.INT, enum=[0, 1],
                 description="Filter by items assigned to recipes."
             )
         ]
     )
 )
 class BaseRecipeAttrViewSet(mixins.DestroyModelMixin,
-                mixins.UpdateModelMixin, 
-                mixins.ListModelMixin, 
-                viewsets.GenericViewSet):
+                            mixins.UpdateModelMixin,
+                            mixins.ListModelMixin,
+                            viewsets.GenericViewSet):
     """Base viewset for recipe attributes"""
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -135,8 +135,8 @@ class TagViewSet(BaseRecipeAttrViewSet):
     serializer_class = serializers.TagSerializer
     queryset = Tag.objects.all()
 
+
 class IngredientViewSet(BaseRecipeAttrViewSet):
     """Manage ingredients in the database."""
     serializer_class = serializers.IngredientSerializer
     queryset = Ingredient.objects.all()
-    

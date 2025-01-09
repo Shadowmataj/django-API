@@ -9,9 +9,10 @@ from django.contrib.auth import get_user_model
 
 from core import models
 
+
 def create_user(email="user@example.com", password="testpass123"):
     """Create and return a new user"""
-    return get_user_model().objects.create_user(email,password)
+    return get_user_model().objects.create_user(email, password)
 
 
 class ModelTests(TestCase):
@@ -21,7 +22,9 @@ class ModelTests(TestCase):
         """Test creating a user with an email successful."""
         email = "test@example.com"
         password = "testpast123"
-        user = get_user_model().objects.create_user(email=email, password=password)
+        user = get_user_model().objects.create_user(
+            email=email,
+            password=password)
 
         self.assertEqual(user.email, email)
         self.assertTrue(user.check_password(password))
@@ -34,7 +37,7 @@ class ModelTests(TestCase):
             ["TEST3@EXAMPLE.COM", "TEST3@example.com"],
             ["test4@example.COM", "test4@example.com"]
         ]
-        
+
         for email, expected in sample_emails:
             user = get_user_model().objects.create_user(email, "sample123")
             self.assertEqual(user.email, expected)
@@ -43,14 +46,14 @@ class ModelTests(TestCase):
         """Test creating a user without an email raises a ValueError."""
         with self.assertRaises(ValueError):
             get_user_model().objects.create_user("", "sample123")
-            
+
     def test_creating_superuser(self):
         """Test creating a superuser."""
         user = get_user_model().objects.create_superuser(
             email="test@example.com",
-            password="sample123"   
+            password="sample123",
         )
-        
+
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
 
@@ -87,11 +90,11 @@ class ModelTests(TestCase):
         )
 
         self.assertEqual(str(ingredient), ingredient.name)
-    
+
     @patch("core.models.uuid.uuid4")
     def test_recipe_file_name_uuid(self, mock_uuid):
         """Test generating image path."""
-        uuid="test-uuid"
+        uuid = "test-uuid"
         mock_uuid.return_value = uuid
         file_path = models.recipe_image_file_path(None, "example.jpg")
 

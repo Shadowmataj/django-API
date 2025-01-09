@@ -12,6 +12,7 @@ from django.contrib.auth.models import (
     PermissionsMixin,
 )
 
+
 def recipe_image_file_path(instance, filename):
     """Generate file path for new recipe image."""
     ext = os.path.splitext(filename)[1]
@@ -20,6 +21,7 @@ def recipe_image_file_path(instance, filename):
     return os.path.join("uploads", "recipe", filename)
 
 # Create User Manager
+
 
 class UserManager(BaseUserManager):
     """User Manager."""
@@ -58,6 +60,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = "email"
 
+
 class Recipe(models.Model):
     """Recipe object."""
     user = models.ForeignKey(
@@ -75,7 +78,8 @@ class Recipe(models.Model):
     image = models.ImageField(null=True, upload_to=recipe_image_file_path)
 
     def __str__(self):
-        return self.title 
+        return self.title
+
 
 class Tag(models.Model):
     """Tag for filtering recipes."""
@@ -86,7 +90,8 @@ class Tag(models.Model):
     )
 
     def __str__(self):
-        return self.name 
+        return self.name
+
 
 class Ingredient(models.Model):
     """Ingredient for filtering recipes."""
@@ -97,4 +102,4 @@ class Ingredient(models.Model):
     )
 
     def __str__(self):
-        return self.name 
+        return self.name
