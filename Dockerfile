@@ -9,6 +9,7 @@ ENV PYTHONUNBUFFERED 1
 #copy files from our local directory to a directory in the image
 COPY ./requirements.txt /tmp/requirements.txt
 COPY ./requirements.dev.txt /tmp/requirements.dev.txt
+COPY ./scripts /scripts
 COPY ./app /app
 
 WORKDIR /app
@@ -24,7 +25,7 @@ RUN python -m venv /py && \
     apk add --update --no-cache postgresql-client jpeg-dev && \
     # 
     apk add --update --no-cache --virtual .tmp-build-deps \
-        build-base postgresql-dev musl-dev zlib zlib-dev && \
+        build-base postgresql-dev musl-dev zlib zlib-dev linux-headers && \
     #install de requirements list inside the docker image
     /py/bin/pip install -r /tmp/requirements.txt && \
     #
@@ -44,8 +45,11 @@ RUN python -m venv /py && \
     mkdir -p /vol/web/media && \
     mkdir -p /vol/web/static && \
     chown -R django-user:django-user /vol && \
-    chmod -R 755 /vol
+    chmod -R 755 /vol &&\
+    chmod -R +x /scripts
 #updates the enviroment variable PATH so we can avoid writing "py/bin" so every time we run a python command it runs directly from our virtual enviroment
-ENV PATH="/py/bin:$PATH"
+ENV PATH="/scripts:/py/bin:$PATH"
 #swith to the created user
 USER django-user
+
+CMD ["run.sh"]
